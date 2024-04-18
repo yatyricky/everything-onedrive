@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Numbers</title>
+    <link href="bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        #spinner {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.3);
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div>
+            <div class="mb-3">
+                <input type="text" class="form-control" id="f1">
+            </div>
+            <div class="mb-3">
+                <input type="text" class="form-control" id="f2">
+            </div>
+            <button type="button" class="btn btn-primary" onclick="submit(index)">Add</button>
+        </div>
+        <div id="result"></div>
+    </div>
+
+    <div id="spinner">
+        <div class="h-100 d-flex align-items-center justify-content-center">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="bootstrap/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+    <script>
+        let index
+        let f1 = document.getElementById("f1")
+        let f2 = document.getElementById("f2")
+        let spinner = document.getElementById("spinner")
+        let result = document.getElementById("result")
+        let task = null
+        async function submit(index) {
+            if (task) {
+                result.innerHTML = "..."
+                return
+            }
+
+            try {
+                spinner.style.display = "block"
+                task = await fetch("/calculate", {
+                    headers: new Headers({ "Content-Type": "application/json" }),
+                    method: "POST",
+                    body: JSON.stringify({ f1: f1.value, f2: f2.value, index })
+                })
+                let data = await task.json()
+                result.innerHTML = "" + data.result
+
+                Array.prototype.slice.call(document.getElementsByTagName("a")).map((e, i) => {
+                    e.onclick = () => {
+                        submit(i)
+                    }
+                })
+            } catch (error) {
+            } finally {
+                task = null
+                spinner.style.display = "none"
+            }
+
+        }
+    </script>
+</body>
+
+</html>
