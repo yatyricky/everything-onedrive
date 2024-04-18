@@ -142,6 +142,7 @@ app.post("/postResult", (req, res) => {
         qTask.result = everything
         let html = everything.map((e) => `<p><a>${e}</a></p>`).join("")
         qTask.res.status(200).send({ success: true, result: html })
+        qTask.res = null
     } catch (error) {
         console.log(error.message);
         res.status(200).send({ success: false, reason: "" + error })
@@ -166,6 +167,7 @@ app.post("/copyResult", (req, res) => {
 
         // everything
         qTask.res.status(200).send({ success: true, result: "done" })
+        qTask.res = null
     } catch (error) {
         console.log(error.message);
         res.status(200).send({ success: false, reason: "" + error })
@@ -175,7 +177,10 @@ app.post("/copyResult", (req, res) => {
 setInterval(() => {
     if (Date.now() - qTask.ts > machineTimeout) {
         qTask.status = TASK_NONE
-        qTask.res.status(200).send({ success: false, result: "-1" })
+        if (qTask.res) {
+            qTask.res.status(200).send({ success: false, result: "-1" })
+            qTask.res = null
+        }
     }
 }, 1000);
 
