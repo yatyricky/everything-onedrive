@@ -12,6 +12,7 @@ const fpEs = config.fpEs
 const fpFetch = config.fpFetch
 const maxFetch = config.maxFetch
 const interval = config.interval
+const maxResult = config.maxResult
 // end config
 
 async function waitForSeconds(s) {
@@ -46,7 +47,7 @@ async function program() {
 
             switch (resp.status) {
                 case TASK_QUERY:
-                    child_process.execSync(`${fpEs} ${resp.qs} -sort-date-modified-descending -export-txt out.txt`)
+                    child_process.execSync(`${fpEs} "${resp.qs}" -sort-date-modified-descending -max-results ${maxResult} -export-txt out.txt`)
                     lines = fs.readFileSync("out.txt", "utf8").split("\n").map(e => e.trim()).filter(e => {
                         if (!fs.existsSync(e)) {
                             return false
