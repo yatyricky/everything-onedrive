@@ -1,9 +1,8 @@
 const child_process = require("child_process")
 const fs = require("fs")
 const path = require("path")
-// const https = require('https');
 
-// process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 // config
 let config = JSON.parse(fs.readFileSync(path.join(__dirname, "config.json")).toString())
