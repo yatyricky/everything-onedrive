@@ -173,11 +173,9 @@ app.post("/copyResult", (req, res) => {
 })
 
 setInterval(() => {
-    if (qTask.status === TASK_COPY_SENT || qTask.status === TASK_QUERY_SENT) {
-        if (Date.now() - qTask.ts > machineTimeout) {
-            qTask.status = TASK_NONE
-            qTask.res.status(200).send({ success: false, result: "-1" })
-        }
+    if (Date.now() - qTask.ts > machineTimeout) {
+        qTask.status = TASK_NONE
+        qTask.res.status(200).send({ success: false, result: "-1" })
     }
 }, 1000);
 
